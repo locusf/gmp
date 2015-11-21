@@ -548,6 +548,7 @@ var scanTests = []struct {
 	{"0 ", "%v", "0", 1},
 	{"2+3", "%v", "2", 2},
 	{"0XABC 12", "%v", "2748", 3},
+	{"10", "%z", "60", 0},
 }
 
 func TestScan(t *testing.T) {

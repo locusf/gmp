@@ -46,7 +46,6 @@ import (
 	"math/rand"
 	"runtime"
 	"strings"
-	"unicode"
 	"unsafe"
 )
 
@@ -409,6 +408,8 @@ func base_for_rune(ch rune) int {
 		return 16
 	case 'X':
 		return -16
+	case 'z':
+		return 60
 	}
 	return 0 // unknown format
 }
@@ -536,10 +537,12 @@ func (z *Int) Scan(s fmt.ScanState, ch rune) error {
 		base = 16
 	case 's', 'v':
 		// let scan determine the base
+	case 'z':
+		base = 60
 	default:
 		return errors.New("Int.Scan: invalid verb")
 	}
-	charset := "0123456789abcdef"
+	charset := "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz."
 	if base != 0 {
 		charset = charset[:base]
 	}
@@ -561,7 +564,6 @@ func (z *Int) Scan(s fmt.ScanState, ch rune) error {
 			s.UnreadRune()
 			break
 		}
-		ch = unicode.ToLower(ch)
 		if len(in) == 0 {
 			if ch == '+' {
 				// Skip leading + as gmp doesn't understand them
